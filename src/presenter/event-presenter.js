@@ -48,6 +48,7 @@ export default class EventPresenter {
 
     eventComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
       replaceEventToEditForm();
+      render(editFormComponent, this.#eventContainer);
     });
 
     editFormComponent.element.querySelector('event--edit').addEventListener('submit', (evt) => {
@@ -58,4 +59,6 @@ export default class EventPresenter {
 
     render(eventComponent, this.#eventList.element);
   }
+
+
 }

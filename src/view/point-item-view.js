@@ -1,7 +1,7 @@
 
 import {createElement} from '../render.js';
 
-function createEventItemTemplate(point) {
+function createEventItemTemplate() {
   return (`<li class="trip-events__item">
   <div class="event">
     <time class="event__date" datetime="2019-03-18">MAR 18</time>

@@ -29,7 +29,7 @@ function createEditOffersTemplate(offers) {
 
 function createEditTemplate(point) {
 
-  const {basePrice, dateFrom, dateTo, destination, offers, type} = point;
+  const {basePrice, dateFrom, dateTo, destination, offers} = point;
 
   return (`<form class="event event--edit" action="#" method="post">
   <header class="event__header">
