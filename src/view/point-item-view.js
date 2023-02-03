@@ -36,18 +36,25 @@ function createEventItemTemplate() {
 }
 
 export default class EventItem {
-  getTemplate() {
-    return createEventItemTemplate();
+  #element = null;
+  #point = null;
+
+  constructor({point}) {
+    this.#point = point;
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get template() {
+    return createEventItemTemplate(this.#point);
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

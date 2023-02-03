@@ -34,7 +34,7 @@ function getPicture() {
 }
 
 function createCreateTemplate(point) {
-  const {destination, offers, type} = point;
+  const {destination} = point;
 
   return (`<form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -151,22 +151,25 @@ function createCreateTemplate(point) {
 }
 
 export default class PointCreateView {
+  #element = null;
+  #point = null;
+
   constructor({point}) {
-    this.point = point;
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createCreateTemplate(this.point);
+  get template() {
+    return createCreateTemplate(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }

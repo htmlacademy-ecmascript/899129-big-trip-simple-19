@@ -1,34 +1,64 @@
 import SortView from '../view/sort-view.js';
 import PointEditView from '../view/point-editing-view.js';
-import PointCreateView from '../view/point-creating-view.js';
 import EventItem from '../view/point-item-view.js';
 import PointListView from '../view/point-list-view.js';
 import {render} from '../render.js';
 export default class EventPresenter {
-  eventListContainer = new PointListView();
+  #eventContainer = null;
+  #eventsModel = null;
+  #eventList = new PointListView();
+  #pointsList = [];
 
   constructor({eventContainer}, eventsModel) {
-    this.eventContainer = eventContainer;
-    this.eventsModel = eventsModel;
+    this.#eventContainer = eventContainer;
+    this.#eventsModel = eventsModel;
   }
 
   init() {
-    this.pointsList = [...this.eventsModel.getPoints()];
+    this.#pointsList = [...this.#eventsModel.points];
 
-    render(new SortView(), this.eventContainer);
+    render(new SortView(), this.#eventContainer);
+    render(this.#eventList, this.#eventContainer);
 
-    for (let i = 0; i < 1; i++) {
-      render(new PointCreateView({point: this.pointsList[i]}), this.eventContainer);
+    for (let i = 0; i < this.#pointsList.length; i++) {
+      this.#renderEvent(this.#pointsList[i]);
     }
 
-    render(this.eventListContainer, this.eventContainer);
-
-    for (let i = 0; i < 3; i++) {
-      render(new EventItem({event: this.pointsList[i]}), this.eventListContainer.getElement());
-    }
-
-    for (let i = 1; i < 2; i++) {
-      render(new PointEditView({point: this.pointsList[i]}), this.eventContainer);
-    }
   }
+
+  #renderEvent({point}) {
+    const eventComponent = new EventItem({point});
+    const editFormComponent = new PointEditView({point});
+
+    const replaceEventToEditForm = () => {
+      this.#eventList.element.replaceChild(editFormComponent.element, eventComponent.element);
+    };
+
+    const replaceEditFormToEvent = () => {
+      this.#eventList.element.replaceChild(eventComponent.element, editFormComponent.element);
+    };
+
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceEditFormToEvent();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
+
+    eventComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceEventToEditForm();
+      render(editFormComponent, this.#eventContainer);
+    });
+
+    editFormComponent.element.querySelector('event--edit').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceEditFormToEvent();
+      document.addEventListener('keydown', escKeyDownHandler);
+    });
+
+    render(eventComponent, this.#eventList.element);
+  }
+
+
 }
