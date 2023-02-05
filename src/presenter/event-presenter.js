@@ -2,6 +2,7 @@ import SortView from '../view/sort-view.js';
 import PointEditView from '../view/point-editing-view.js';
 import EventItem from '../view/point-item-view.js';
 import PointListView from '../view/point-list-view.js';
+import ListEmptyView from '../view/list-empty-view.js';
 import {render} from '../render.js';
 export default class EventPresenter {
   #eventContainer = null;
@@ -20,10 +21,20 @@ export default class EventPresenter {
     render(new SortView(), this.#eventContainer);
     render(this.#eventList, this.#eventContainer);
 
-    for (let i = 0; i < this.#pointsList.length; i++) {
-      this.#renderEvent(this.#pointsList[i]);
-    }
 
+    if (this.#pointsList.length === 0) {
+      this.#renderMessage();
+    } else {
+      for (let i = 0; i < this.#pointsList.length; i++) {
+        this.#renderEvent(this.#pointsList[i]);
+      }
+    }
+  }
+
+  #renderMessage() {
+    const emptyListComponent = new ListEmptyView();
+
+    render(emptyListComponent, this.#eventContainer);
   }
 
   #renderEvent({point}) {
@@ -57,8 +68,7 @@ export default class EventPresenter {
       document.addEventListener('keydown', escKeyDownHandler);
     });
 
+
     render(eventComponent, this.#eventList.element);
   }
-
-
 }
